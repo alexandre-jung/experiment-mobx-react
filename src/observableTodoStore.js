@@ -6,6 +6,8 @@ import {
   computed,
   action,
 } from 'mobx';
+import { observer } from 'mobx-react-lite';
+import { createContext, useContext } from 'react';
 import TodoList from './todo';
 
 class ObservableTodoStore extends TodoList {
@@ -29,3 +31,20 @@ const observableTodoStore = new ObservableTodoStore([
 ]);
 
 export default observableTodoStore;
+
+const TodoListContext = createContext(observableTodoStore);
+
+export const TodoListProvider = observer(({ store, children }) => {
+  console.log(store.allTodos.map((item) => toJS(item)));
+  return (
+    // Force the render by recreating a new value every time ? NO WAY !
+    <TodoListContext.Provider value={{ store }}>
+      {children}
+    </TodoListContext.Provider>
+  );
+});
+
+export const useTodoList = () => {
+  const { store } = useContext(TodoListContext);
+  return store;
+};

@@ -1,9 +1,13 @@
 import React, { useState } from 'react';
-import { observer } from 'mobx-react-lite';
+import { useTodoList } from './observableTodoStore';
 
-const App = observer(({ todoList }) => {
+const App = () => {
   const [todo, setTodo] = useState('');
-  const addTodo = (task) => todoList.add(task);
+  const todoList = useTodoList();
+  const addTodo = (task) => {
+    todoList.add(task);
+    setTodo('');
+  };
 
   return (
     <div>
@@ -34,6 +38,6 @@ const App = observer(({ todoList }) => {
       </ul>
     </div>
   );
-});
+};
 
 export default App;
